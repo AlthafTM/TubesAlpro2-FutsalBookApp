@@ -71,9 +71,9 @@ func tampilkanMenuAwal() {
 		ubahDataPenyewa()
 	} else if input == 3 {
 		ubahDataSewaLapangan()
-	} else if input == 4 {
+	} else if input == 4 && nLapangan > 0 {
 		CariDataJadwalSewa()
-	} else if input == 5 {
+	} else if input == 5 && nPenyewa > 0 {
 		cariDataPenyewa()
 	} else if input == 6 {
 		cekStatistikUsaha()
@@ -981,7 +981,7 @@ func hapusDataSewa() {
 }
 
 func CariDataJadwalSewa() {
-	var cek1, cek2 int
+	var cek1, cek2, cek4 int
 	var temp lapangan
 	var pass, i, j, minIdx int
 	var lanjut, cek3 string
@@ -1005,6 +1005,9 @@ func CariDataJadwalSewa() {
 
 		fmt.Print("Pakai Selection atau Insertion Sort? (1/2) : ")
 		fmt.Scan(&cek2)
+
+		fmt.Print("Ascending atau Descending? (1/2) : ")
+		fmt.Scan(&cek4)
 
 		for i = 1; i <= nLapangan; i++ {
 			dataUrut[i] = dataLapangan[i]
@@ -1071,6 +1074,12 @@ func CariDataJadwalSewa() {
 		} else {
 			fmt.Println("Pilihan tidak valid.")
 			gagal = true
+		}
+
+		if cek4 == 2 {
+			for a, b := 1, nLapangan; a < b; a, b = a+1, b-1 {
+				dataUrut[a], dataUrut[b] = dataUrut[b], dataUrut[a]
+			}
 		}
 
 		if !gagal {
@@ -1335,16 +1344,16 @@ func cekPendapatanBulanan() {
 
 	ulang = true
 
-	fmt.Println("====================================================")
-	fmt.Println("|             CEK PENDAPATAN BULANAN               |")
-	fmt.Println("====================================================")
-	fmt.Println("| Memberikan statistik pendapatan perbulan         |")
-	fmt.Println("====================================================")
-
-	fmt.Print("Pendapatan setiap bulan atau spesifik? (1/2) : ")
-	fmt.Scan(&cek)
-
 	for ulang {
+		fmt.Println("====================================================")
+		fmt.Println("|             CEK PENDAPATAN BULANAN               |")
+		fmt.Println("====================================================")
+		fmt.Println("| Memberikan statistik pendapatan perbulan         |")
+		fmt.Println("====================================================")
+
+		fmt.Print("Pendapatan setiap bulan atau spesifik? (1/2) : ")
+		fmt.Scan(&cek)
+
 		if cek == 1 {
 
 			for i := 1; i <= nJadwalSewa; i++ {
@@ -1387,7 +1396,7 @@ func cekPendapatanBulanan() {
 			fmt.Println("----------------------------------------------------")
 
 		} else if cek == 2 {
-			fmt.Print("Bulan ke berapa? (MM) : 01 ")
+			fmt.Print("Bulan ke berapa? (MM) : ")
 			fmt.Scan(&pilih)
 
 			var total float64

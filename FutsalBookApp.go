@@ -54,9 +54,9 @@ func tampilkanMenuAwal() {
 	fmt.Println("====================================================")
 	fmt.Println("|                FUTSAL-BOOK SYSTEM                |")
 	fmt.Println("====================================================")
-	fmt.Printf("| %-45s %2d |\n", "Edit Data Lapangan", 1)
-	fmt.Printf("| %-45s %2d |\n", "Edit Data Penyewa", 2)
-	fmt.Printf("| %-45s %2d |\n", "Edit Data Sewa Lapangan", 3)
+	fmt.Printf("| %-45s %2d |\n", "CRUD Data Lapangan", 1)
+	fmt.Printf("| %-45s %2d |\n", "CRUD Data Penyewa", 2)
+	fmt.Printf("| %-45s %2d |\n", "CRUD Data Sewa Lapangan", 3)
 	fmt.Printf("| %-45s %2d |\n", "Cari Data Jadwal Kosong", 4)
 	fmt.Printf("| %-45s %2d |\n", "Cari Data Penyewa", 5)
 	fmt.Printf("| %-45s %2d |\n", "Cek Statistik Usaha", 6)
@@ -111,14 +111,14 @@ func ubahDataLapangan() {
 		tampilkanMenuAwal()
 	} else {
 		fmt.Println("Input tidak valid / ada data yang belum terisi.")
-		tampilkanMenuAwal()
+		ubahDataLapangan()
 	}
 }
 
 func tampilkanDataLapangan() {
 	fmt.Println("======================================================================================================================================================")
 	fmt.Printf("| %-3s | %-30s | %-25s | %-20s | %-15s | %-10s | %-10s | %-12s |\n",
-		"ID", "Nama", "Lokasi", "Kota", "Harga/Jam", "Jam Mulai", "Jam Akhir", "Status")
+		"ID", "Nama", "Alamat", "Kota", "Harga/Jam", "Jam Mulai", "Jam Akhir", "Status")
 	fmt.Println("======================================================================================================================================================")
 
 	for i := 1; i <= nLapangan; i++ {
@@ -164,7 +164,7 @@ func tambahDataLapangan() {
 			fmt.Print("Masukkan Nama Lapangan : ")
 			fmt.Scan(&dataLapangan[n].nama)
 
-			fmt.Print("Masukkan Lokasi        : ")
+			fmt.Print("Masukkan Alamat        : ")
 			fmt.Scan(&dataLapangan[n].lokasi)
 
 			fmt.Print("Masukkan Kota          : ")
@@ -173,17 +173,25 @@ func tambahDataLapangan() {
 			fmt.Print("Masukkan Harga per Jam : ")
 			fmt.Scan(&dataLapangan[n].hargaPerJam)
 
-			fmt.Print("Masukkan Status        : ")
-			fmt.Scan(&dataLapangan[n].status)
+			dataLapangan[n].status = "KOSONG"
 
 			fmt.Print("Masukkan Jam Mulai     : ")
 			fmt.Scan(&dataLapangan[n].jamOperasionalMulai)
+			for !(dataLapangan[n].jamOperasionalMulai > 0 && dataLapangan[n].jamOperasionalMulai <= 24) {
+				fmt.Print("Jam Mulai Tidak Valid, Masukan Jam Mulai Baru: ")
+				fmt.Scan(&dataLapangan[n].jamOperasionalMulai)
+			}
 
 			fmt.Print("Masukkan Jam Selesai   : ")
 			fmt.Scan(&dataLapangan[n].jamOperasionalSelesai)
+			for !((dataLapangan[n].jamOperasionalSelesai < dataLapangan[n].jamOperasionalMulai) ||
+				dataLapangan[n].jamOperasionalSelesai > 0 && dataLapangan[n].jamOperasionalSelesai <= 24) {
+				fmt.Print("Jam Selesai Tidak Valid, Masukan Jam Selesai Baru: ")
+				fmt.Scan(&dataLapangan[n].jamOperasionalSelesai)
+			}
 
 			fmt.Println("----------------------------------------------------")
-			fmt.Printf("Data lapangan berhasil diinput						 ")
+			fmt.Printf("Data lapangan berhasil diinput						 \n")
 			fmt.Println("----------------------------------------------------")
 		}
 
@@ -378,7 +386,7 @@ func ubahDataPenyewa() {
 		tampilkanMenuAwal()
 	} else {
 		fmt.Println("Input tidak valid / ada data yang belum terisi.")
-		tampilkanMenuAwal()
+		ubahDataPenyewa()
 	}
 }
 
@@ -627,7 +635,7 @@ func ubahDataSewaLapangan() {
 
 func lihatSewaLapangan() {
 	fmt.Println("==============================================================================================================================")
-	fmt.Printf("| %-5s | %-10s | %-11s | %-15s | %-15s | %-18s |\n",
+	fmt.Printf("| %-5s | %-10s | %-11s | %-15s | %-17s | %-18s |\n",
 		"ID", "ID Penyewa", "ID Lapangan", "Tanggal", "Jam Sewa", "Total Biaya")
 	fmt.Println("==============================================================================================================================")
 

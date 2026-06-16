@@ -10,7 +10,7 @@ type lapangan struct {
 	lokasi                string
 	kota                  string
 	hargaPerJam           float64
-	status                string // "KOSONG", "DIPAKAI", "RENOVASI","FULL"
+	status                string // "KOSONG", "DIPAKAI","FULL"
 	jamOperasionalMulai   int
 	jamOperasionalSelesai int
 }

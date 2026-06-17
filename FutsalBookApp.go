@@ -108,8 +108,6 @@ func ubahDataLapangan() {
 		editDataLapangan()
 	} else if input == 4 && nLapangan > 0 {
 		hapusDataLapangan()
-	} else if input == 22 {
-		tambahDataLapanganCepat()
 	} else if input == 0 {
 		tampilkanMenuAwal()
 	} else {
@@ -180,15 +178,15 @@ func tambahDataLapangan() {
 
 			fmt.Print("Masukkan Jam Mulai     : ")
 			fmt.Scan(&dataLapangan[n].jamOperasionalMulai)
-			for !(dataLapangan[n].jamOperasionalMulai > 0 && dataLapangan[n].jamOperasionalMulai <= 24) {
+			for dataLapangan[n].jamOperasionalMulai < 0 || dataLapangan[n].jamOperasionalMulai >= 24 {
 				fmt.Print("Jam Mulai Tidak Valid, Masukan Jam Mulai Baru: ")
 				fmt.Scan(&dataLapangan[n].jamOperasionalMulai)
 			}
 
 			fmt.Print("Masukkan Jam Selesai   : ")
 			fmt.Scan(&dataLapangan[n].jamOperasionalSelesai)
-			for !((dataLapangan[n].jamOperasionalSelesai < dataLapangan[n].jamOperasionalMulai) ||
-				dataLapangan[n].jamOperasionalSelesai > 0 && dataLapangan[n].jamOperasionalSelesai <= 24) {
+			for dataLapangan[n].jamOperasionalSelesai <= dataLapangan[n].jamOperasionalMulai ||
+				dataLapangan[n].jamOperasionalSelesai > 24 {
 				fmt.Print("Jam Selesai Tidak Valid, Masukan Jam Selesai Baru: ")
 				fmt.Scan(&dataLapangan[n].jamOperasionalSelesai)
 			}
@@ -204,41 +202,6 @@ func tambahDataLapangan() {
 			ulang = false
 		}
 	}
-	ubahDataLapangan()
-}
-
-func tambahDataLapanganCepat() {
-	var lanjut string
-	var ulang, gagal bool
-
-	ulang = true
-
-	for ulang {
-		gagal = false
-		if nLapangan >= NMAX {
-			fmt.Println("Data penuh.")
-			gagal = true
-		}
-		if !gagal {
-			nLapangan++
-			n := nLapangan
-			dataLapangan[n].id = n
-
-			fmt.Scan(&dataLapangan[n].nama)
-			fmt.Scan(&dataLapangan[n].lokasi)
-			fmt.Scan(&dataLapangan[n].kota)
-			fmt.Scan(&dataLapangan[n].hargaPerJam)
-			fmt.Scan(&dataLapangan[n].status)
-			fmt.Scan(&dataLapangan[n].jamOperasionalMulai)
-			fmt.Scan(&dataLapangan[n].jamOperasionalSelesai)
-		}
-
-		fmt.Scan(&lanjut)
-		if lanjut != "lanjut" {
-			ulang = false
-		}
-	}
-
 	ubahDataLapangan()
 }
 
@@ -340,15 +303,29 @@ func hapusDataLapangan() {
 		fmt.Print("Masukkan id lapangan : ")
 		fmt.Scan(&id)
 		for id > nLapangan || id < 1 {
-			fmt.Print("ID Penyewa Tidak Ditemukan, Masukan ID Baru: ")
+			fmt.Print("ID Lapangan Tidak Ditemukan, Masukan ID Baru: ")
 			fmt.Scan(&id)
 		}
 
-		for i := id; i <= nLapangan-1; i++ {
-			dataLapangan[i] = dataLapangan[i+1]
+		ada := false
+		for i := 1; i <= nJadwalSewa && !ada; i++ {
+			if dataJadwalSewa[i].idLapangan == id {
+				ada = true
+			}
 		}
-		dataLapangan[nLapangan] = dataLapangan[nLapangan+1]
-		nLapangan--
+
+		if ada {
+			fmt.Println("Lapangan ini masih dipakai di data sewa.")
+			fmt.Println("Hapus data sewa terlebih dahulu sebelum menghapus lapangan ini.")
+		} else {
+			for i := id; i < nLapangan; i++ {
+				dataLapangan[i] = dataLapangan[i+1]
+				dataLapangan[i].id = i
+			}
+			dataLapangan[nLapangan] = lapangan{}
+			nLapangan--
+			fmt.Println("Data lapangan berhasil dihapus.")
+		}
 
 		fmt.Print("Hapus data lagi? (lanjut/stop): ")
 		fmt.Scan(&lanjut)
@@ -383,8 +360,6 @@ func ubahDataPenyewa() {
 		editDataPenyewa()
 	} else if input == 4 && nPenyewa > 0 {
 		hapusDataPenyewa()
-	} else if input == 22 {
-		tambahDataPenyewaCepat()
 	} else if input == 0 {
 		tampilkanMenuAwal()
 	} else {
@@ -454,38 +429,6 @@ func tambahDataPenyewa() {
 		}
 
 		fmt.Print("Tambah data lagi? (lanjut/stop): ")
-		fmt.Scan(&lanjut)
-		if lanjut != "lanjut" {
-			ulang = false
-		}
-	}
-
-	ubahDataPenyewa()
-}
-
-func tambahDataPenyewaCepat() {
-	var lanjut string
-	var ulang, gagal bool
-
-	ulang = true
-
-	for ulang {
-		gagal = false
-		if nPenyewa >= NMAX {
-			fmt.Println("Data penuh.")
-			gagal = true
-		}
-		if !gagal {
-			nPenyewa++
-			n := nPenyewa
-			dataPenyewa[n].id = n
-
-			fmt.Scan(&dataPenyewa[n].nama)
-			fmt.Scan(&dataPenyewa[n].noTelp)
-			fmt.Scan(&dataPenyewa[n].alamat)
-			fmt.Scan(&dataPenyewa[n].email)
-		}
-
 		fmt.Scan(&lanjut)
 		if lanjut != "lanjut" {
 			ulang = false
@@ -585,12 +528,25 @@ func hapusDataPenyewa() {
 			fmt.Scan(&id)
 		}
 
-		for i := id; i <= nPenyewa-1; i++ {
-			dataPenyewa[i] = dataPenyewa[i+1]
-			dataPenyewa[i].id = i
+		ada := false
+		for i := 1; i <= nJadwalSewa && !ada; i++ {
+			if dataJadwalSewa[i].idPenyewa == id {
+				ada = true
+			}
 		}
-		dataPenyewa[nPenyewa] = penyewa{}
-		nPenyewa--
+
+		if ada {
+			fmt.Println("Penyewa ini masih dipakai di data sewa.")
+			fmt.Println("Hapus data sewa terlebih dahulu sebelum menghapus penyewa ini.")
+		} else {
+			for i := id; i < nPenyewa; i++ {
+				dataPenyewa[i] = dataPenyewa[i+1]
+				dataPenyewa[i].id = i
+			}
+			dataPenyewa[nPenyewa] = penyewa{}
+			nPenyewa--
+			fmt.Println("Data penyewa berhasil dihapus.")
+		}
 
 		fmt.Print("Hapus data lagi? (lanjut/stop): ")
 		fmt.Scan(&lanjut)
@@ -1156,6 +1112,7 @@ func cariDataPenyewa() {
 	var ulang bool
 	var i, j int
 	var temp penyewa
+	var dataUrut tabPenyewa
 
 	ulang = true
 
@@ -1172,6 +1129,10 @@ func cariDataPenyewa() {
 		fmt.Print("Pakai Sequential atau Binary Search? (1/2) : ")
 		fmt.Scan(&cek2)
 
+		for i = 1; i <= nPenyewa; i++ {
+			dataUrut[i] = dataPenyewa[i]
+		}
+
 		if cek2 == 1 {
 			if cek1 == 1 {
 				fmt.Print("Masukkan Nama Penyewa : ")
@@ -1179,18 +1140,18 @@ func cariDataPenyewa() {
 
 				idx = -1
 				for i = 1; i <= nPenyewa && idx == -1; i++ {
-					if dataPenyewa[i].nama == cariNama {
+					if dataUrut[i].nama == cariNama {
 						idx = i
 					}
 				}
 
 				if idx != -1 {
 					fmt.Println("DATA PENYEWA DITEMUKAN")
-					fmt.Println("ID     :", dataPenyewa[idx].id)
-					fmt.Println("Nama   :", dataPenyewa[idx].nama)
-					fmt.Println("NoTelp :", dataPenyewa[idx].noTelp)
-					fmt.Println("Alamat :", dataPenyewa[idx].alamat)
-					fmt.Println("Email  :", dataPenyewa[idx].email)
+					fmt.Println("ID     :", dataUrut[idx].id)
+					fmt.Println("Nama   :", dataUrut[idx].nama)
+					fmt.Println("NoTelp :", dataUrut[idx].noTelp)
+					fmt.Println("Alamat :", dataUrut[idx].alamat)
+					fmt.Println("Email  :", dataUrut[idx].email)
 				} else {
 					fmt.Println("Data penyewa dengan nama tersebut tidak ditemukan.")
 				}
@@ -1201,18 +1162,18 @@ func cariDataPenyewa() {
 
 				idx = -1
 				for i = 1; i <= nPenyewa && idx == -1; i++ {
-					if dataPenyewa[i].noTelp == cariTLP {
+					if dataUrut[i].noTelp == cariTLP {
 						idx = i
 					}
 				}
 
 				if idx != -1 {
 					fmt.Println("DATA PENYEWA DITEMUKAN")
-					fmt.Println("ID     :", dataPenyewa[idx].id)
-					fmt.Println("Nama   :", dataPenyewa[idx].nama)
-					fmt.Println("NoTelp :", dataPenyewa[idx].noTelp)
-					fmt.Println("Alamat :", dataPenyewa[idx].alamat)
-					fmt.Println("Email  :", dataPenyewa[idx].email)
+					fmt.Println("ID     :", dataUrut[idx].id)
+					fmt.Println("Nama   :", dataUrut[idx].nama)
+					fmt.Println("NoTelp :", dataUrut[idx].noTelp)
+					fmt.Println("Alamat :", dataUrut[idx].alamat)
+					fmt.Println("Email  :", dataUrut[idx].email)
 				} else {
 					fmt.Println("Data penyewa dengan nomor telepon tersebut tidak ditemukan.")
 				}
@@ -1228,10 +1189,10 @@ func cariDataPenyewa() {
 
 				for i = 1; i < nPenyewa; i++ {
 					for j = i + 1; j <= nPenyewa; j++ {
-						if dataPenyewa[i].nama > dataPenyewa[j].nama {
-							temp = dataPenyewa[i]
-							dataPenyewa[i] = dataPenyewa[j]
-							dataPenyewa[j] = temp
+						if dataUrut[i].nama > dataUrut[j].nama {
+							temp = dataUrut[i]
+							dataUrut[i] = dataUrut[j]
+							dataUrut[j] = temp
 						}
 					}
 				}
@@ -1243,9 +1204,9 @@ func cariDataPenyewa() {
 				for kiri <= kanan && idx == -1 {
 					tengah = (kiri + kanan) / 2
 
-					if dataPenyewa[tengah].nama == cariNama {
+					if dataUrut[tengah].nama == cariNama {
 						idx = tengah
-					} else if dataPenyewa[tengah].nama < cariNama {
+					} else if dataUrut[tengah].nama < cariNama {
 						kiri = tengah + 1
 					} else {
 						kanan = tengah - 1
@@ -1254,11 +1215,11 @@ func cariDataPenyewa() {
 
 				if idx != -1 {
 					fmt.Println("DATA PENYEWA DITEMUKAN")
-					fmt.Println("ID     :", dataPenyewa[idx].id)
-					fmt.Println("Nama   :", dataPenyewa[idx].nama)
-					fmt.Println("NoTelp :", dataPenyewa[idx].noTelp)
-					fmt.Println("Alamat :", dataPenyewa[idx].alamat)
-					fmt.Println("Email  :", dataPenyewa[idx].email)
+					fmt.Println("ID     :", dataUrut[idx].id)
+					fmt.Println("Nama   :", dataUrut[idx].nama)
+					fmt.Println("NoTelp :", dataUrut[idx].noTelp)
+					fmt.Println("Alamat :", dataUrut[idx].alamat)
+					fmt.Println("Email  :", dataUrut[idx].email)
 				} else {
 					fmt.Println("Data penyewa dengan nama tersebut tidak ditemukan.")
 				}
@@ -1269,10 +1230,10 @@ func cariDataPenyewa() {
 
 				for i = 1; i < nPenyewa; i++ {
 					for j = i + 1; j <= nPenyewa; j++ {
-						if dataPenyewa[i].noTelp > dataPenyewa[j].noTelp {
-							temp = dataPenyewa[i]
-							dataPenyewa[i] = dataPenyewa[j]
-							dataPenyewa[j] = temp
+						if dataUrut[i].noTelp > dataUrut[j].noTelp {
+							temp = dataUrut[i]
+							dataUrut[i] = dataUrut[j]
+							dataUrut[j] = temp
 						}
 					}
 				}
@@ -1284,9 +1245,9 @@ func cariDataPenyewa() {
 				for kiri <= kanan && idx == -1 {
 					tengah = (kiri + kanan) / 2
 
-					if dataPenyewa[tengah].noTelp == cariTLP {
+					if dataUrut[tengah].noTelp == cariTLP {
 						idx = tengah
-					} else if dataPenyewa[tengah].noTelp < cariTLP {
+					} else if dataUrut[tengah].noTelp < cariTLP {
 						kiri = tengah + 1
 					} else {
 						kanan = tengah - 1
@@ -1295,11 +1256,11 @@ func cariDataPenyewa() {
 
 				if idx != -1 {
 					fmt.Println("DATA PENYEWA DITEMUKAN")
-					fmt.Println("ID     :", dataPenyewa[idx].id)
-					fmt.Println("Nama   :", dataPenyewa[idx].nama)
-					fmt.Println("NoTelp :", dataPenyewa[idx].noTelp)
-					fmt.Println("Alamat :", dataPenyewa[idx].alamat)
-					fmt.Println("Email  :", dataPenyewa[idx].email)
+					fmt.Println("ID     :", dataUrut[idx].id)
+					fmt.Println("Nama   :", dataUrut[idx].nama)
+					fmt.Println("NoTelp :", dataUrut[idx].noTelp)
+					fmt.Println("Alamat :", dataUrut[idx].alamat)
+					fmt.Println("Email  :", dataUrut[idx].email)
 				} else {
 					fmt.Println("Data penyewa dengan nomor telepon tersebut tidak ditemukan.")
 				}
@@ -1453,7 +1414,7 @@ func cariJamPopuler() {
 		}
 
 		for j := 1; j <= nJadwalSewa; j++ {
-			for jam := dataJadwalSewa[j].jamMulai; jam <= dataJadwalSewa[j].jamSelesai; jam++ {
+			for jam := dataJadwalSewa[j].jamMulai; jam < dataJadwalSewa[j].jamSelesai; jam++ {
 				if jam >= 0 && jam < 24 {
 					hitungJam[jam]++
 				}

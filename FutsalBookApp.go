@@ -213,6 +213,7 @@ func editDataLapangan() {
 	ulang = true
 
 	for ulang {
+		gagal = false
 		fmt.Println("====================================================")
 		fmt.Println("|               EDIT DATA LAPANGAN                 |")
 		fmt.Println("====================================================")
@@ -325,7 +326,6 @@ func hapusDataLapangan() {
 		}
 
 		if ada {
-			fmt.Println("Lapangan ini masih dipakai di data sewa.")
 			fmt.Println("Hapus data sewa terlebih dahulu sebelum menghapus lapangan ini.")
 		} else {
 			for i := id; i < nLapangan; i++ {
@@ -456,6 +456,7 @@ func editDataPenyewa() {
 	ulang = true
 
 	for ulang {
+		gagal = false
 		fmt.Println("====================================================")
 		fmt.Println("|               EDIT DATA PENYEWA                  |")
 		fmt.Println("====================================================")
@@ -546,7 +547,6 @@ func hapusDataPenyewa() {
 		}
 
 		if ada {
-			fmt.Println("Penyewa ini masih dipakai di data sewa.")
 			fmt.Println("Hapus data sewa terlebih dahulu sebelum menghapus penyewa ini.")
 		} else {
 			for i := id; i < nPenyewa; i++ {
@@ -629,7 +629,6 @@ func tambahSewaLapangan() {
 	var lanjut string
 	var ulang, gagal bool
 
-	n = nJadwalSewa + 1
 	ulang = true
 
 	fmt.Println("====================================================")
@@ -640,6 +639,7 @@ func tambahSewaLapangan() {
 
 	for ulang {
 		gagal = false
+		n = nJadwalSewa + 1
 
 		if n >= NMAX {
 			fmt.Println("Data penuh.")
@@ -1322,6 +1322,7 @@ func cekPendapatanBulanan() {
 	ulang = true
 
 	for ulang {
+		totalPerBulan = [13]float64{}
 		fmt.Println("====================================================")
 		fmt.Println("|             CEK PENDAPATAN BULANAN               |")
 		fmt.Println("====================================================")

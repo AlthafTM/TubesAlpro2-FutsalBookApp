@@ -260,9 +260,19 @@ func editDataLapangan() {
 		case 6:
 			fmt.Print("Masukkan Jam Mulai baru: ")
 			fmt.Scan(&dataLapangan[cari].jamOperasionalMulai)
+			for dataLapangan[cari].jamOperasionalMulai < 0 || dataLapangan[cari].jamOperasionalMulai >= 24 {
+				fmt.Print("Jam Mulai Tidak Valid, Masukan Jam Mulai Baru: ")
+				fmt.Scan(&dataLapangan[cari].jamOperasionalMulai)
+			}
+
 		case 7:
 			fmt.Print("Masukkan Jam Selesai baru: ")
 			fmt.Scan(&dataLapangan[cari].jamOperasionalSelesai)
+			for dataLapangan[cari].jamOperasionalSelesai <= dataLapangan[cari].jamOperasionalMulai ||
+				dataLapangan[cari].jamOperasionalSelesai > 24 {
+				fmt.Print("Jam Selesai Tidak Valid, Masukan Jam Selesai Baru: ")
+				fmt.Scan(&dataLapangan[cari].jamOperasionalSelesai)
+			}
 		case 0:
 			ulang = false
 			continue
@@ -797,7 +807,6 @@ func editDataSewa() {
 		fmt.Printf("| %-45s %2d |\n", "ID Lapangan", 2)
 		fmt.Printf("| %-45s %2d |\n", "Tanggal", 3)
 		fmt.Printf("| %-45s %2d |\n", "Jam Mulai & Selesai", 4)
-		fmt.Printf("| %-45s %2d |\n", "Status Sewa", 5)
 		fmt.Printf("| %-45s %2d |\n", "Kembali", 0)
 		fmt.Println("----------------------------------------------------")
 		fmt.Print("Pilihan: ")
@@ -844,10 +853,6 @@ func editDataSewa() {
 				fmt.Print("Jam Tidak Valid, Masukan Ulang: ")
 				fmt.Scan(&dataJadwalSewa[cari].jamSelesai)
 			}
-
-		case 5:
-			fmt.Print("Masukkan Status Sewa baru: ")
-			fmt.Scan(&dataLapangan[dataJadwalSewa[cari].idLapangan].status)
 
 		case 0:
 			ulang = false

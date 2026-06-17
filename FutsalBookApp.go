@@ -604,12 +604,12 @@ func ubahDataSewaLapangan() {
 
 func lihatSewaLapangan() {
 	fmt.Println("==============================================================================================================================")
-	fmt.Printf("| %-5s | %-10s | %-11s | %-15s | %-17s | %-18s |\n",
+	fmt.Printf("| %-5s | %-10s | %-11s | %-15s | %-13s | %-18s |\n",
 		"ID", "ID Penyewa", "ID Lapangan", "Tanggal", "Jam Sewa", "Total Biaya")
 	fmt.Println("==============================================================================================================================")
 
 	for i := 1; i <= nJadwalSewa; i++ {
-		fmt.Printf("| %-5d | %-10d | %-11d | %-15s | %02d - %02d       | Rp.%-13.2f |\n",
+		fmt.Printf("| %-5d | %-10d | %-11d | %-15s | %02d - %02d      | Rp.%-13.2f |\n",
 			dataJadwalSewa[i].idSewa,
 			dataJadwalSewa[i].idPenyewa,
 			dataJadwalSewa[i].idLapangan,

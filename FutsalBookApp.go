@@ -77,8 +77,11 @@ func tampilkanMenuAwal() {
 		cariDataPenyewa()
 	} else if input == 6 {
 		cekStatistikUsaha()
-	} else {
+	} else if input == 0 {
 		fmt.Println("Terima kasih telah menggunakan Aplikasi Futsal Book !")
+	} else {
+		fmt.Println("Input tidak valid / ada data yang belum terisi.")
+		tampilkanMenuAwal()
 	}
 }
 

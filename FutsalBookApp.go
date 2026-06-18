@@ -598,7 +598,7 @@ func ubahDataSewaLapangan() {
 		tampilkanMenuAwal()
 	} else {
 		fmt.Println("Input tidak valid / ada data yang belum terisi.")
-		tampilkanMenuAwal()
+		ubahDataSewaLapangan()
 	}
 }
 

@@ -609,7 +609,7 @@ func lihatSewaLapangan() {
 	fmt.Println("==============================================================================================================================")
 
 	for i := 1; i <= nJadwalSewa; i++ {
-		fmt.Printf("| %-5d | %-10d | %-11d | %-15s | %02d - %02d      | Rp.%-13.2f |\n",
+		fmt.Printf("| %-5d | %-10d | %-11d | %-15s | %02d - %02d       | Rp.%-13.2f   |\n",
 			dataJadwalSewa[i].idSewa,
 			dataJadwalSewa[i].idPenyewa,
 			dataJadwalSewa[i].idLapangan,
@@ -941,6 +941,8 @@ func hapusDataSewa() {
 		}
 		dataJadwalSewa[nJadwalSewa] = jadwalsewa{}
 		nJadwalSewa--
+
+		fmt.Println("Data penyewa berhasil dihapus.")
 
 		fmt.Print("Hapus data lagi? (lanjut/stop): ")
 		fmt.Scan(&lanjut)

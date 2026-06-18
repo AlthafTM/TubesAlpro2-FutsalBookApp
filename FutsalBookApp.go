@@ -320,7 +320,7 @@ func hapusDataLapangan() {
 
 		ada := false
 		for i := 1; i <= nJadwalSewa && !ada; i++ {
-			if dataJadwalSewa[i].idLapangan == id {
+			if dataJadwalSewa[i].idLapangan >= id {
 				ada = true
 			}
 		}
@@ -541,7 +541,7 @@ func hapusDataPenyewa() {
 
 		ada := false
 		for i := 1; i <= nJadwalSewa && !ada; i++ {
-			if dataJadwalSewa[i].idPenyewa == id {
+			if dataJadwalSewa[i].idPenyewa >= id {
 				ada = true
 			}
 		}
